@@ -87,6 +87,7 @@
       <input id="chatId" placeholder="예: 123456789 또는 -100xxxxxxxxxx" />
       <div class="btnbar">
         <button class="btn" id="btnAddSub">구독 등록</button>
+        <button class="danger" id="btnDelSub">구독 삭제</button>
         <button class="btn2" id="btnListSubs">구독자 조회</button>
       </div>
     </section>
@@ -341,6 +342,20 @@
       $("chatId").value="";
     }catch(e){ toast("구독 등록 실패: "+e.message); }
   });
+  $("btnDelSub").addEventListener("click", async ()=>{
+  const chat_id = $("chatId").value.trim();
+  if(!chat_id) return toast("chat_id 입력");
+  if(!confirm(`구독 삭제할까요? (${chat_id})`)) return;
+
+  try{
+    await api(`/api/subscribers?chat_id=${encodeURIComponent(chat_id)}`, { method:"DELETE" });
+    toast("구독 삭제 완료");
+    $("chatId").value="";
+  }catch(e){
+    toast("구독 삭제 실패: " + e.message);
+  }
+});
+
   $("btnListSubs").addEventListener("click", async ()=>{
     if(!adminKey()) return toast("ADMIN_KEY 입력");
     try{
