@@ -249,7 +249,9 @@
   async function loadTopics(){
     try{
       const data = await api("/api/topics");
-      renderTopics(data.topics || []);
+      renderTopics((data && Array.isArray(data.topics)) ? data.topics : []);
+      if (!data) throw new Error("API 응답이 JSON이 아닙니다. /api/topics가 HTML로 내려오는지 확인하세요.");
+
       setStatus(true, "OK");
     }catch(e){
       setStatus(false, "FAIL");
